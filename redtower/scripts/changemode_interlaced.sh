@@ -5,7 +5,7 @@ VERTICAL=${2:-480}
 REFRESH=${3:-30}
 SCREEN=${4:-VGA-1}
 SCALEHORIZONTAL=${5:-1}
-SCALEVERTICAL=${6:-2}
+SCALEVERTICAL=${6:-1}
 
 echo "cvt..."
 CVT_RES=$(cvt -i $HORIZONTAL $VERTICAL $REFRESH | grep -E 'Modeline (.*)'| sed -E 's/Modeline//g')
