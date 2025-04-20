@@ -4,6 +4,8 @@ font pango:JetBrainsMonoNL Nerd Font Mono 12
 
 bindsym $mod+J exec jstest-gtk
 bindsym $mod+Return exec kitty
+exec --no-startup-id retroarch
+exec --no-startup-id bash -c "~/scripts/changemode.sh"
 
 bindsym $mod+q kill
 bindsym $mod+Shift+Escape exec i3-msg exit
