@@ -5,7 +5,7 @@ HORIZONTAL_RESOLUTION=${1:-640}
 # parameter 2 vertical resolution. default 480
 VERTICAL_RESOLUTION=${2:-480}
 # parameter 3: refresh rate. default 60
-REFRESH_RATE=${3:-60}
+REFRESH_RATE=${3:-30}
 # parameter 4: interlaced. default no
 INTERLACED=${4:-n}
 # parameter 5: left margin. default 0
@@ -31,6 +31,15 @@ echo "extract the mode name"
 MODE_NAME=$(echo $CVT_RES | grep -Eo '\".+\"')
 echo "MODE_NAME=\$(echo $CVT_RES | grep -Eo '\".+\"')"
 echo "MODE_NAME=$MODE_NAME"
+
+# add the new mode to xrandr
+echo "xrandr --newmode $CVT_RES"
+xrandr --newmode $CVT_RES 
+echo "xrandr --addmode $SCREEN $MODE_NAME"
+xrandr --addmode $SCREEN $MODE_NAME
+echo "xrandr --output $SCREEN --mode $MODE_NAME --verbose  --scale $SCALE"
+SCALE=$SCALEHORIZONTAL"x"$SCALEVERTICAL
+xrandr --output $SCREEN --mode $MODE_NAME --verbose  --scale $SCALE
 
 exit 0
 
