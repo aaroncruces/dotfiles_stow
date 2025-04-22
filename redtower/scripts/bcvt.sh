@@ -6,22 +6,22 @@ SCREEN=${1:-VGA-1}
 HORIZONTAL_RESOLUTION=${2:-640}
 # parameter 2 vertical resolution. default 480
 VERTICAL_RESOLUTION=${3:-480}
-# parameter 3: refresh rate. default 60
-REFRESH_RATE=${4:-30}
-# parameter 4: interlaced. default no
-INTERLACED=${5:-n}
-# parameter 5: left margin. default 0
-LEFT_MARGIN=${6:-0}
-# parameter 6: right margin. default 0
-RIGHT_MARGIN=${7:-0}
-# parameter 7: top margin. default 0
-TOP_MARGIN=${8:-0}
-# parameter 8: bottom margin. default 0 
-BOTTOM_MARGIN=${9:-0}
-# parameter 9: horizontal scale. default 1
-SCALEHORIZONTAL=${10:-1}
-# parameter 10: vertical scale. default 1
-SCALEVERTICAL=${11:-1}
+# parameter 3  : interlaced. default no
+INTERLACED=${3:-n}
+# parameter 4: left margin. default 0
+LEFT_MARGIN=${4:-0}
+# parameter 5: right margin. default 0
+RIGHT_MARGIN=${5:-0}
+# parameter 6: top margin. default 0
+TOP_MARGIN=${6:-0}
+# parameter 7: bottom margin. default 0 
+BOTTOM_MARGIN=${7:-0}
+# parameter 8: horizontal scale. default 1
+SCALEHORIZONTAL=${8:-1}
+# parameter 9: vertical scale. default 1
+SCALEVERTICAL=${9:-1}
+# parameter 10: refresh rate. default 60
+REFRESH_RATE=${10:-60}
 
 # calculate the cvt resolution
 echo "calculate the cvt resolution"
