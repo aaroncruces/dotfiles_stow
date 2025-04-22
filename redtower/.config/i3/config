@@ -7,7 +7,7 @@ bindsym $mod+Return exec kitty
 
 #exec --no-startup-id bash -c "~/scripts/crt_resolution.sh "
 exec --no-startup-id bash -c "~/scripts/crt_resolution.sh --interlaced y --vertical 480 --refresh 30  --left-margin 12 --right-margin 30 --top-margin 18 --bottom-margin 22"
-exec --no-startup-id emulationstation
+exec --no-startup-id bash -c "emulationstation --fullscreen"
 
 bindsym $mod+q kill
 bindsym $mod+Shift+Escape exec i3-msg exit
