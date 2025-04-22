@@ -5,10 +5,10 @@ SCREEN="VGA-1"
 HORIZONTAL_VIEWPORT=640
 VERTICAL_VIEWPORT=240
 INTERLACED="n"
-LEFT_MARGIN=20
-RIGHT_MARGIN=40
-TOP_MARGIN=3
-BOTTOM_MARGIN=3
+LEFT_MARGIN=12
+RIGHT_MARGIN=28
+TOP_MARGIN=8
+BOTTOM_MARGIN=8
 SCALEHORIZONTAL=1
 SCALEVERTICAL=1
 REFRESH_RATE=60
@@ -230,6 +230,9 @@ xrandr --addmode $SCREEN "$MODE_NAME_FINAL" || { echo "Error: Failed to add mode
 SCALE="${SCALEHORIZONTAL}x${SCALEVERTICAL}"
 echo "xrandr --output $SCREEN --mode \"$MODE_NAME_FINAL\" --verbose --scale $SCALE"
 xrandr --output $SCREEN --mode "$MODE_NAME_FINAL" --verbose --scale $SCALE || { echo "Error: Failed to set mode"; exit 1; }
+
+# ./bcvt.sh --left-margin 12 --right-margin 28 --top-margin 8 --bottom-margin 8 --scale-vertical 2
+# ./bcvt.sh --interlaced y --vertical 480 --refresh 30  --left-margin 12 --right-margin 30 --top-margin 18 --bottom-margin 22
 
 
 
