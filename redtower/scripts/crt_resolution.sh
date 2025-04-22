@@ -12,6 +12,7 @@ BOTTOM_MARGIN=8
 SCALEHORIZONTAL=1
 SCALEVERTICAL=1
 REFRESH_RATE=60
+RUN_MODE="y"
 
 # Parse command-line flags
 while [[ $# -gt 0 ]]; do
@@ -60,6 +61,10 @@ while [[ $# -gt 0 ]]; do
             REFRESH_RATE="$2"
             shift 2
             ;;
+        --run-mode)
+            RUN_MODE="$2"
+            shift 2
+            ;;
         *)
             echo "Error: Unknown option $1"
             echo "Usage: $0 [--screen <name>] [--horizontal <pixels>] [--vertical <lines>] [--interlaced y|n] [--left-margin <pixels>] [--right-margin <pixels>] [--top-margin <lines>] [--bottom-margin <lines>] [--scale-horizontal <factor>] [--scale-vertical <factor>] [--refresh <hz>]"
@@ -84,6 +89,10 @@ if [[ "$INTERLACED" != "y" && "$INTERLACED" != "n" ]]; then
 fi
 if ! [[ "$SCALEHORIZONTAL" =~ ^[0-9]+(\.[0-9]+)?$ ]] || ! [[ "$SCALEVERTICAL" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
     echo "Error: Scale factors must be numbers"
+    exit 1
+fi
+if [[ "$RUN_MODE" != "y" && "$RUN_MODE" != "n" ]]; then
+    echo "Error: --run-mode must be 'y' or 'n'"
     exit 1
 fi
 
@@ -228,8 +237,10 @@ xrandr --newmode "$MODE_NAME_FINAL" $CVT_RES_FINAL || { echo "Error: Failed to c
 echo "xrandr --addmode $SCREEN \"$MODE_NAME_FINAL\""
 xrandr --addmode $SCREEN "$MODE_NAME_FINAL" || { echo "Error: Failed to add mode"; exit 1; }
 SCALE="${SCALEHORIZONTAL}x${SCALEVERTICAL}"
-echo "xrandr --output $SCREEN --mode \"$MODE_NAME_FINAL\" --verbose --scale $SCALE"
-xrandr --output $SCREEN --mode "$MODE_NAME_FINAL" --verbose --scale $SCALE || { echo "Error: Failed to set mode"; exit 1; }
+if [[ "$RUN_MODE" == "y" ]]; then 
+    echo "xrandr --output $SCREEN --mode \"$MODE_NAME_FINAL\" --verbose --scale $SCALE"  
+    xrandr --output $SCREEN --mode "$MODE_NAME_FINAL" --verbose --scale $SCALE || { echo "Error: Failed to set mode"; exit 1; }
+fi
 
 # ./bcvt.sh --left-margin 12 --right-margin 28 --top-margin 8 --bottom-margin 8 --scale-vertical 2
 # ./bcvt.sh --interlaced y --vertical 480 --refresh 30  --left-margin 12 --right-margin 30 --top-margin 18 --bottom-margin 22
