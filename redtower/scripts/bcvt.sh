@@ -33,7 +33,7 @@ echo "extract the mode name"
 MODE_NAME=$(echo $CVT_RES | grep -Eo '\".+\"')
 echo "MODE_NAME=\$(echo $CVT_RES | grep -Eo '\".+\"')"
 echo "MODE_NAME=$MODE_NAME"
-
+## tst
 # add the new mode to xrandr
 echo "xrandr --newmode $CVT_RES"
 xrandr --newmode $CVT_RES 
