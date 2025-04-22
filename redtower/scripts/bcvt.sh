@@ -224,12 +224,12 @@ echo "CVT_RES_FINAL: $CVT_RES_FINAL"
 
 # Apply with xrandr
 echo "xrandr --newmode \"$MODE_NAME_FINAL\" $CVT_RES_FINAL"
-#xrandr --newmode "$MODE_NAME_FINAL" $CVT_RES_FINAL || { echo "Error: Failed to create new mode"; exit 1; }
+xrandr --newmode "$MODE_NAME_FINAL" $CVT_RES_FINAL || { echo "Error: Failed to create new mode"; exit 1; }
 echo "xrandr --addmode $SCREEN \"$MODE_NAME_FINAL\""
-#xrandr --addmode $SCREEN "$MODE_NAME_FINAL" || { echo "Error: Failed to add mode"; exit 1; }
+xrandr --addmode $SCREEN "$MODE_NAME_FINAL" || { echo "Error: Failed to add mode"; exit 1; }
 SCALE="${SCALEHORIZONTAL}x${SCALEVERTICAL}"
 echo "xrandr --output $SCREEN --mode \"$MODE_NAME_FINAL\" --verbose --scale $SCALE"
-#xrandr --output $SCREEN --mode "$MODE_NAME_FINAL" --verbose --scale $SCALE || { echo "Error: Failed to set mode"; exit 1; }
+xrandr --output $SCREEN --mode "$MODE_NAME_FINAL" --verbose --scale $SCALE || { echo "Error: Failed to set mode"; exit 1; }
 
 
 
