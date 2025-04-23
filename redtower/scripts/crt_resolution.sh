@@ -14,7 +14,6 @@ SCALEVERTICAL=1
 REFRESH_RATE=60
 RUN_MODE="y"
 CUSTOM_MODE_NAME=""
-REDUCED_BLANKING="n"
 
 # Parse command-line flags
 while [[ $# -gt 0 ]]; do
@@ -71,13 +70,9 @@ while [[ $# -gt 0 ]]; do
             RUN_MODE="$2"
             shift 2
             ;;
-        --reduced-blanking)
-            REDUCED_BLANKING="$2"
-            shift 2
-            ;;
         *)
             echo "Error: Unknown option $1"
-            echo "Usage: $0 [--screen <name>] [--horizontal <pixels>] [--vertical <lines>] [--interlaced y|n] [--left-margin <pixels>] [--right-margin <pixels>] [--top-margin <lines>] [--bottom-margin <lines>] [--scale-horizontal <factor>] [--scale-vertical <factor>] [--refresh <hz>] [--custom-mode-name <name>] [--run-mode y|n] [--reduced-blanking y|n]"
+            echo "Usage: $0 [--screen <name>] [--horizontal <pixels>] [--vertical <lines>] [--interlaced y|n] [--left-margin <pixels>] [--right-margin <pixels>] [--top-margin <lines>] [--bottom-margin <lines>] [--scale-horizontal <factor>] [--scale-vertical <factor>] [--refresh <hz>] [--custom-mode-name <name>] [--run-mode y|n]"
             exit 1
             ;;
     esac
@@ -106,15 +101,10 @@ if [[ "$RUN_MODE" != "y" && "$RUN_MODE" != "n" ]]; then
     echo "Error: --run-mode must be 'y' or 'n'"
     exit 1
 fi
-if [[ "$REDUCED_BLANKING" != "y" && "$REDUCED_BLANKING" != "n" ]]; then
-    echo "Error: --reduced-blanking must be 'y' or 'n'"
-    exit 1
-fi
 
 # --- Calculate the non-expanded cvt resolution ---
 echo "--- Calculate the non-expanded cvt resolution ---"
 CVT_CMD="cvt"
-[[ "$REDUCED_BLANKING" == "y" ]] && CVT_CMD="$CVT_CMD -r"
 [[ "$INTERLACED" == "y" ]] && CVT_CMD="$CVT_CMD -i"
 CVT_RES_ORIGINAL=$($CVT_CMD $HORIZONTAL_VIEWPORT $VERTICAL_VIEWPORT $REFRESH_RATE | grep -E 'Modeline (.*)' | sed -E 's/Modeline//g')
 if [[ -z "$CVT_RES_ORIGINAL" ]]; then
