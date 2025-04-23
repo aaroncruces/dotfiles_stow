@@ -6,7 +6,7 @@ bindsym $mod+J exec jstest-gtk
 bindsym $mod+Return exec kitty
 
 #exec --no-startup-id bash -c "~/scripts/crt_resolution.sh "
-exec --no-startup-id bash -c "~/scripts/crt_resolution.sh --left-margin 12 --right-margin 28 --top-margin 8 --bottom-margin 8 --run-mode n --custom-mode-name 240p"
+exec --no-startup-id bash -c "~/scripts/crt_resolution.sh crt_resolution.sh --horizontal 640 --vertical 240 --refresh 60 --interlaced n --left-margin 10 --right-margin 30 --top-margin 12 --bottom-margin 0 --run-mode n --custom-mode-name 240p"
 exec --no-startup-id bash -c "~/scripts/crt_resolution.sh --interlaced y --vertical 480 --refresh 30  --left-margin 12 --right-margin 30 --top-margin 18 --bottom-margin 22 --custom-mode-name 480i"
 exec --no-startup-id kitty --single-instance -e bash -c "emulationstation --fullscreen; exec bash"
 

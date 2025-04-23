@@ -14,6 +14,7 @@ SCALEVERTICAL=1
 REFRESH_RATE=60
 RUN_MODE="y"
 CUSTOM_MODE_NAME=""
+REDUCED_BLANKING="n"
 
 # Parse command-line flags
 while [[ $# -gt 0 ]]; do
@@ -70,9 +71,13 @@ while [[ $# -gt 0 ]]; do
             RUN_MODE="$2"
             shift 2
             ;;
+        --reduced-blanking)
+            REDUCED_BLANKING="$2"
+            shift 2
+            ;;
         *)
             echo "Error: Unknown option $1"
-            echo "Usage: $0 [--screen <name>] [--horizontal <pixels>] [--vertical <lines>] [--interlaced y|n] [--left-margin <pixels>] [--right-margin <pixels>] [--top-margin <lines>] [--bottom-margin <lines>] [--scale-horizontal <factor>] [--scale-vertical <factor>] [--refresh <hz>] [--custom-mode-name <name>] [--run-mode y|n]"
+            echo "Usage: $0 [--screen <name>] [--horizontal <pixels>] [--vertical <lines>] [--interlaced y|n] [--left-margin <pixels>] [--right-margin <pixels>] [--top-margin <lines>] [--bottom-margin <lines>] [--scale-horizontal <factor>] [--scale-vertical <factor>] [--refresh <hz>] [--custom-mode-name <name>] [--run-mode y|n] [--reduced-blanking y|n]"
             exit 1
             ;;
     esac
@@ -101,14 +106,17 @@ if [[ "$RUN_MODE" != "y" && "$RUN_MODE" != "n" ]]; then
     echo "Error: --run-mode must be 'y' or 'n'"
     exit 1
 fi
+if [[ "$REDUCED_BLANKING" != "y" && "$REDUCED_BLANKING" != "n" ]]; then
+    echo "Error: --reduced-blanking must be 'y' or 'n'"
+    exit 1
+fi
 
 # --- Calculate the non-expanded cvt resolution ---
 echo "--- Calculate the non-expanded cvt resolution ---"
-if [[ "$INTERLACED" == "y" ]]; then
-    CVT_RES_ORIGINAL=$(cvt -i $HORIZONTAL_VIEWPORT $VERTICAL_VIEWPORT $REFRESH_RATE | grep -E 'Modeline (.*)' | sed -E 's/Modeline//g')
-else
-    CVT_RES_ORIGINAL=$(cvt $HORIZONTAL_VIEWPORT $VERTICAL_VIEWPORT $REFRESH_RATE | grep -E 'Modeline (.*)' | sed -E 's/Modeline//g')
-fi
+CVT_CMD="cvt"
+[[ "$REDUCED_BLANKING" == "y" ]] && CVT_CMD="$CVT_CMD -r"
+[[ "$INTERLACED" == "y" ]] && CVT_CMD="$CVT_CMD -i"
+CVT_RES_ORIGINAL=$($CVT_CMD $HORIZONTAL_VIEWPORT $VERTICAL_VIEWPORT $REFRESH_RATE | grep -E 'Modeline (.*)' | sed -E 's/Modeline//g')
 if [[ -z "$CVT_RES_ORIGINAL" ]]; then
     echo "Error: Failed to generate CVT modeline"
     exit 1
@@ -165,11 +173,7 @@ VERTICAL_RESOLUTION=$(($VERTICAL_VIEWPORT + $TOP_MARGIN + $BOTTOM_MARGIN))
 echo "HORIZONTAL_RESOLUTION: $HORIZONTAL_RESOLUTION"
 echo "VERTICAL_RESOLUTION: $VERTICAL_RESOLUTION"
 
-if [[ "$INTERLACED" == "y" ]]; then
-    CVT_RES_EXPANDED=$(cvt -i $HORIZONTAL_RESOLUTION $VERTICAL_RESOLUTION $REFRESH_RATE | grep -E 'Modeline (.*)' | sed -E 's/Modeline//g')
-else
-    CVT_RES_EXPANDED=$(cvt $HORIZONTAL_RESOLUTION $VERTICAL_RESOLUTION $REFRESH_RATE | grep -E 'Modeline (.*)' | sed -E 's/Modeline//g')
-fi
+CVT_RES_EXPANDED=$($CVT_CMD $HORIZONTAL_RESOLUTION $VERTICAL_RESOLUTION $REFRESH_RATE | grep -E 'Modeline (.*)' | sed -E 's/Modeline//g')
 if [[ -z "$CVT_RES_EXPANDED" ]]; then
     echo "Error: Failed to generate expanded CVT modeline"
     exit 1
@@ -240,12 +244,8 @@ H_SYNC_END_FINAL=$(($H_FRONT_PORCH_END_FINAL + $H_SYNC_WIDTH_EXPANDED))
 V_FRONT_PORCH_END_FINAL=$(($V_ACTIVE_ORIGINAL + $V_FRONT_PORCH_WIDTH_EXPANDED + $BOTTOM_MARGIN))
 V_SYNC_END_FINAL=$(($V_FRONT_PORCH_END_FINAL + $V_SYNC_WIDTH_EXPANDED))
 
-# Adjust pixel clock for exact refresh rate
-if [[ "$INTERLACED" == "y" ]]; then
-    PIXEL_CLOCK_ADJUSTED=$(echo "($H_TOTAL_EXPANDED * $V_TOTAL_EXPANDED * $REFRESH_RATE * 2) / 1000000" | bc -l | awk '{printf "%.2f", $1}')
-else
-    PIXEL_CLOCK_ADJUSTED=$(echo "($H_TOTAL_EXPANDED * $V_TOTAL_EXPANDED * $REFRESH_RATE) / 1000000" | bc -l | awk '{printf "%.2f", $1}')
-fi
+# Adjust pixel clock for exact refresh rate (no doubling for interlaced, cvt -i handles field rate)
+PIXEL_CLOCK_ADJUSTED=$(echo "($H_TOTAL_EXPANDED * $V_TOTAL_EXPANDED * $REFRESH_RATE) / 1000000" | bc -l | awk '{printf "%.2f", $1}')
 # Validate pixel clock
 if [[ -z "$PIXEL_CLOCK_ADJUSTED" || $(echo "$PIXEL_CLOCK_ADJUSTED <= 0" | bc -l) -eq 1 ]]; then
     echo "Error: Invalid PIXEL_CLOCK_ADJUSTED ($PIXEL_CLOCK_ADJUSTED). Check H_TOTAL_EXPANDED, V_TOTAL_EXPANDED, or REFRESH_RATE."
@@ -272,13 +272,15 @@ echo "hsync: $hsync kHz"
 
 # Calculate and verify refresh rate
 if [[ "$INTERLACED" == "y" ]]; then
-    refresh=$(echo "($PIXEL_CLOCK_ADJUSTED * 1000000) / ($H_TOTAL_EXPANDED * $V_TOTAL_EXPANDED * 2)" | bc -l | awk '{printf "%.2f", $1}')
+    refresh=$(echo "($PIXEL_CLOCK_ADJUSTED * 1000000) / ($H_TOTAL_EXPANDED * $V_TOTAL_EXPANDED)" | bc -l | awk '{printf "%.2f", $1}')
+    field_rate=$(echo "$refresh * 2" | bc -l | awk '{printf "%.2f", $1}')
+    echo "Calculated Frame Rate: $refresh Hz, Field Rate: $field_rate Hz"
 else
     refresh=$(echo "($PIXEL_CLOCK_ADJUSTED * 1000000) / ($H_TOTAL_EXPANDED * $V_TOTAL_EXPANDED)" | bc -l | awk '{printf "%.2f", $1}')
+    echo "Calculated Refresh Rate: $refresh Hz"
 fi
-echo "Calculated Refresh Rate: $refresh Hz"
 if (( $(echo "$refresh != $REFRESH_RATE" | bc -l) )); then
-    echo "Warning: Achieved $refresh Hz instead of $REFRESH_RATE Hz. Adjust --horizontal or margins."
+    echo "Warning: Achieved $refresh Hz frame rate instead of $REFRESH_RATE Hz. Adjust --horizontal or margins."
 fi
 
 # Clean up existing mode if it exists
