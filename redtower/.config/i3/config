@@ -6,9 +6,9 @@ bindsym $mod+J exec jstest-gtk
 bindsym $mod+Return exec kitty
 
 #exec --no-startup-id bash -c "~/scripts/crt_resolution.sh "
-exec --no-startup-id bash -c "~/scripts/crt_resolution.sh --left-margin 12 --right-margin 28 --top-margin 8 --bottom-margin 8 --run-mode n"
-exec --no-startup-id bash -c "~/scripts/crt_resolution.sh --interlaced y --vertical 480 --refresh 30  --left-margin 12 --right-margin 30 --top-margin 18 --bottom-margin 22"
-exec --no-startup-id bash -c "emulationstation --fullscreen"
+exec --no-startup-id bash -c "~/scripts/crt_resolution.sh --left-margin 12 --right-margin 28 --top-margin 8 --bottom-margin 8 --run-mode n --custom-mode-name 240p"
+exec --no-startup-id bash -c "~/scripts/crt_resolution.sh --interlaced y --vertical 480 --refresh 30  --left-margin 12 --right-margin 30 --top-margin 18 --bottom-margin 22 --custom-mode-name 480i"
+exec --no-startup-id kitty --single-instance -e bash -c "emulationstation --fullscreen; exec bash"
 
 bindsym $mod+q kill
 bindsym $mod+Shift+Escape exec i3-msg exit
