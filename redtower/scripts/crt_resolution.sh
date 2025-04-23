@@ -13,6 +13,7 @@ SCALEHORIZONTAL=1
 SCALEVERTICAL=1
 REFRESH_RATE=60
 RUN_MODE="y"
+CUSTOM_MODE_NAME=""
 
 # Parse command-line flags
 while [[ $# -gt 0 ]]; do
@@ -59,6 +60,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --refresh)
             REFRESH_RATE="$2"
+            shift 2
+            ;;
+        --custom-mode-name)
+            CUSTOM_MODE_NAME="$2"
             shift 2
             ;;
         --run-mode)
@@ -230,6 +235,10 @@ V_SYNC_END_FINAL=$(($V_FRONT_PORCH_END_FINAL + $V_SYNC_WIDTH_EXPANDED))
 CVT_RES_FINAL="$PIXEL_CLOCK_EXPANDED $H_ACTIVE_ORIGINAL $H_FRONT_PORCH_END_FINAL $H_SYNC_END_FINAL $H_TOTAL_EXPANDED $V_ACTIVE_ORIGINAL $V_FRONT_PORCH_END_FINAL $V_SYNC_END_FINAL $V_TOTAL_EXPANDED $INTERLACE_FLAG $HSYNC_POLARITY_EXPANDED $VSYNC_POLARITY_EXPANDED"
 echo "CVT_RES_FINAL: $CVT_RES_FINAL"
 
+
+if [[ -n $CUSTOM_MODE_NAME ]]; then
+   MODE_NAME_FINAL="$CUSTOM_MODE_NAME"
+fi
 
 # Apply with xrandr
 echo "xrandr --newmode \"$MODE_NAME_FINAL\" $CVT_RES_FINAL"
