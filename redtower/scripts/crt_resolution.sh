@@ -15,6 +15,7 @@ CUSTOM_MODE_NAME=""
 VERTICAL_VIEWPORT=""
 REFRESH_RATE=""
 VERBOSE="n"
+PRINT_MODELINE_ONLY="n"
 
 # Function to log verbose messages
 log_verbose() {
@@ -27,7 +28,7 @@ log_verbose() {
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -h|--help)
-            echo "Usage: $0 [-h|--help] [-v|--verbose] [-s|--screen <name>] [-x|--horizontal <pixels>] [-y|--vertical <lines>] [-i|--interlaced [y|n]] [-L|--left-margin <pixels>] [-R|--right-margin <pixels>] [-T|--top-margin <lines>] [-B|--bottom-margin <lines>] [-X|--scale-horizontal <factor>] [-Y|--scale-vertical <factor>] [-r|--refresh <hz>] [-n|--custom-mode-name <name>] [-m|--run-mode [y|n]]"
+            echo "Usage: $0 [-h|--help] [-v|--verbose] [-s|--screen <name>] [-x|--horizontal <pixels>] [-y|--vertical <lines>] [-i|--interlaced [y|n]] [-L|--left-margin <pixels>] [-R|--right-margin <pixels>] [-T|--top-margin <lines>] [-B|--bottom-margin <lines>] [-X|--scale-horizontal <factor>] [-Y|--scale-vertical <factor>] [-r|--refresh <hz>] [-n|--custom-mode-name <name>] [-m|--run-mode [y|n]] [-p|--print-modeline-only [y|n]]"
             echo
             echo "Options:"
             echo "  -h, --help                Show this help message and exit"
@@ -36,15 +37,16 @@ while [[ $# -gt 0 ]]; do
             echo "  -x, --horizontal <pixels> Set horizontal resolution (default: 640)"
             echo "  -y, --vertical <lines>    Set vertical resolution (default: 240 for progressive, 480 for interlaced)"
             echo "  -i, --interlaced [y|n]    Enable interlaced mode (default: y if no argument, n if not specified)"
-            echo "  -L, --left-margin <pixels>  Set left margin (default: 12)"
-            echo "  -R, --right-margin <pixels> Set right margin (default: 28)"
-            echo "  -T, --top-margin <lines>  Set top margin (default: 8)"
-            echo "  -B, --bottom-margin <lines> Set bottom margin (default: 8)"
+            echo "  -L, --left-margin <pixels>  Set left margin (default: 0)"
+            echo "  -R, --right-margin <pixels> Set right margin (default: 0)"
+            echo "  -T, --top-margin <lines>  Set top margin (default: 0)"
+            echo "  -B, --bottom-margin <lines> Set bottom margin (default: 0)"
             echo "  -X, --scale-horizontal <factor> Set horizontal scale factor (default: 1)"
             echo "  -Y, --scale-vertical <factor> Set vertical scale factor (default: 1)"
             echo "  -r, --refresh <hz>        Set refresh rate (default: 60 for progressive, 30 for interlaced)"
             echo "  -n, --custom-mode-name <name> Set custom mode name (default: auto-generated)"
             echo "  -m, --run-mode [y|n]      Apply mode with xrandr (default: y)"
+            echo "  -p, --print-modeline-only [y|n] Print modeline only without applying (default: n)"
             exit 0
             ;;
         -v|--verbose)
@@ -113,13 +115,27 @@ while [[ $# -gt 0 ]]; do
                 shift 1
             fi
             ;;
+        -p|--print-modeline-only)
+            if [[ "$2" == "y" || "$2" == "n" ]]; then
+                PRINT_MODELINE_ONLY="$2"
+                shift 2
+            else
+                PRINT_MODELINE_ONLY="y"
+                shift 1
+            fi
+            ;;
         *)
             echo "Error: Unknown option $1"
-            echo "Usage: $0 [-h|--help] [-v|--verbose] [-s|--screen <name>] [-x|--horizontal <pixels>] [-y|--vertical <lines>] [-i|--interlaced [y|n]] [-L|--left-margin <pixels>] [-R|--right-margin <pixels>] [-T|--top-margin <lines>] [-B|--bottom-margin <lines>] [-X|--scale-horizontal <factor>] [-Y|--scale-vertical <factor>] [-r|--refresh <hz>] [-n|--custom-mode-name <name>] [-m|--run-mode [y|n]]"
+            echo "Usage: $0 [-h|--help] [-v|--verbose] [-s|--screen <name>] [-x|--horizontal <pixels>] [-y|--vertical <lines>] [-i|--interlaced [y|n]] [-L|--left-margin <pixels>] [-R|--right-margin <pixels>] [-T|--top-margin <lines>] [-B|--bottom-margin <lines>] [-X|--scale-horizontal <factor>] [-Y|--scale-vertical <factor>] [-r|--refresh <hz>] [-n|--custom-mode-name <name>] [-m|--run-mode [y|n]] [-p|--print-modeline-only [y|n]]"
             exit 1
             ;;
     esac
 done
+
+if [[ "$PRINT_MODELINE_ONLY" == "y" && "$RUN_MODE" == "y" ]]; then
+    echo "Error: --print-modeline-only and --run-mode cannot both be active at the same time"
+    exit 1
+fi
 
 # Set default vertical resolution and refresh rate based on interlaced setting
 if [[ -z "$VERTICAL_VIEWPORT" ]]; then
@@ -158,6 +174,10 @@ if ! [[ "$SCALEHORIZONTAL" =~ ^[0-9]+(\.[0-9]+)?$ ]] || ! [[ "$SCALEVERTICAL" =~
 fi
 if [[ "$RUN_MODE" != "y" && "$RUN_MODE" != "n" ]]; then
     echo "Error: --run-mode must be 'y' or 'n'"
+    exit 1
+fi
+if [[ "$PRINT_MODELINE_ONLY" != "y" && "$PRINT_MODELINE_ONLY" != "n" ]]; then
+    echo "Error: --print-modeline-only must be 'y' or 'n'"
     exit 1
 fi
 
@@ -332,20 +352,26 @@ if (( $(echo "$refresh != $REFRESH_RATE" | bc -l) )); then
     echo "Warning: Achieved $refresh Hz frame rate instead of $REFRESH_RATE Hz. Adjust --horizontal or margins."
 fi
 
+if [[ "$PRINT_MODELINE_ONLY" == "y" ]]; then
+    log_verbose "Printing modeline only..."
+    echo "$CVT_RES_FINAL"
+    exit 0
+fi
+
 # Clean up existing mode if it exists
 if xrandr | grep -q "$MODE_NAME_FINAL"; then
-    echo "Removing existing mode: $MODE_NAME_FINAL"
+    log_verbose "Removing existing mode: $MODE_NAME_FINAL"
     xrandr --delmode $SCREEN "$MODE_NAME_FINAL" 2>/dev/null
     xrandr --rmmode "$MODE_NAME_FINAL" 2>/dev/null
 fi
 
 # Apply with xrandr
-echo "xrandr --newmode \"$MODE_NAME_FINAL\" $CVT_RES_FINAL"
+log_verbose "xrandr --newmode \"$MODE_NAME_FINAL\" $CVT_RES_FINAL"
 xrandr --newmode "$MODE_NAME_FINAL" $CVT_RES_FINAL || { echo "Error: Failed to create new mode"; exit 1; }
-echo "xrandr --addmode $SCREEN \"$MODE_NAME_FINAL\""
+log_verbose "xrandr --addmode $SCREEN \"$MODE_NAME_FINAL\""
 xrandr --addmode $SCREEN "$MODE_NAME_FINAL" || { echo "Error: Failed to add mode"; exit 1; }
 SCALE="${SCALEHORIZONTAL}x${SCALEVERTICAL}"
 if [[ "$RUN_MODE" == "y" ]]; then
-    echo "xrandr --output $SCREEN --mode \"$MODE_NAME_FINAL\" --verbose --scale $SCALE"
+    log_verbose "xrandr --output $SCREEN --mode \"$MODE_NAME_FINAL\" --verbose --scale $SCALE"
     xrandr --output $SCREEN --mode "$MODE_NAME_FINAL" --verbose --scale "$SCALE" || { echo "Error: Failed to set mode. Try --horizontal 512 or smaller margins."; exit 1; }
 fi
