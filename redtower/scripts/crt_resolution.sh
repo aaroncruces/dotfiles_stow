@@ -17,6 +17,8 @@ REFRESH_RATE=""
 VERBOSE="n"
 PRINT_MODELINE_ONLY="n"
 
+RUN_MODE_EXPLICIT=""
+
 # Function to log verbose messages
 log_verbose() {
     if [[ "$VERBOSE" == "y" ]]; then
@@ -109,6 +111,7 @@ while [[ $# -gt 0 ]]; do
         -m|--run-mode)
             if [[ "$2" == "y" || "$2" == "n" ]]; then
                 RUN_MODE="$2"
+                RUN_MODE_EXPLICIT="$2"
                 shift 2
             else
                 RUN_MODE="y"
@@ -132,7 +135,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-if [[ "$PRINT_MODELINE_ONLY" == "y" && "$RUN_MODE" == "y" ]]; then
+if [[ "$PRINT_MODELINE_ONLY" == "y" && "$RUN_MODE_EXPLICIT" == "y" ]]; then
     echo "Error: --print-modeline-only and --run-mode cannot both be active at the same time"
     exit 1
 fi
