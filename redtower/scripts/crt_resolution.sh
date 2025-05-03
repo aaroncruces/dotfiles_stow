@@ -335,11 +335,11 @@ if [[ -z "$hsync" || $(echo "$hsync <= 0" | bc -l) -eq 1 ]]; then
     echo "Error: Invalid hsync calculation ($hsync kHz). Check PIXEL_CLOCK_ADJUSTED or H_TOTAL_EXPANDED."
     exit 1
 fi
-if (( $(echo "$hsync < 15 || $hsync > 35" | bc -l) )); then
-    echo "Error: hsync $hsync kHz is out of CRT range (15–35 kHz). Try --horizontal 512 or smaller --left-margin/--right-margin (current: $LEFT_MARGIN/$RIGHT_MARGIN)."
-    echo "Debug: PIXEL_CLOCK_ADJUSTED=$PIXEL_CLOCK_ADJUSTED MHz, H_TOTAL_EXPANDED=$H_TOTAL_EXPANDED"
-    exit 1
-fi
+#if (( $(echo "$hsync < 15 || $hsync > 35" | bc -l) )); then
+#    echo "Error: hsync $hsync kHz is out of CRT range (15–35 kHz). Try --horizontal 512 or smaller --left-margin/--right-margin (current: $LEFT_MARGIN/$RIGHT_MARGIN)."
+#    echo "Debug: PIXEL_CLOCK_ADJUSTED=$PIXEL_CLOCK_ADJUSTED MHz, H_TOTAL_EXPANDED=$H_TOTAL_EXPANDED"
+#    exit 1
+#fi
 log_verbose "hsync: $hsync kHz"
 
 # Calculate and verify refresh rate
