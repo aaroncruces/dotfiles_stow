@@ -3,6 +3,7 @@
 
 # if not using sddm
 if [ $TTY = "/dev/tty1" ];then
+  exec startx
  # export WLR_NO_HARDWARE_CURSORS=1
  # exec Hyprland
 fi
