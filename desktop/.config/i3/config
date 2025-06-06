@@ -21,7 +21,18 @@ font pango:JetBrains Mono 12
 
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
-exec --no-startup-id dex --autostart --environment i3
+# exec --no-startup-id dex --autostart --environment i3
+
+bindsym $mod+W exec chromium
+bindsym $mod+Shift+W exec firefox
+bindsym $mod+K exec keepassxc
+bindsym $mod+F exec pcmanfm
+# bindsym $mod+S exec steam
+# bindsym $mod+C exec code
+bindsym $mod+J exec jstest-gtk
+bindsym $mod+T exec qbittorrent
+# bindsym $mod+D exec dbeaver
+bindsym $mod+Return exec kitty
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.
