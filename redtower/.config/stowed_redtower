@@ -1,0 +1,22 @@
+stowed
+how about a man page for linux and a man page in markdown for github?
+remember that 640 is a default width, is not always obligatory to add -x 640.
+show examples with
+
+add 240p res to crt without margins
+  crt_resolution 
+
+add 480i res to crt without margins
+  crt_resolution -i
+
+
+add 240p res to crt with margins without run the mode (this and with shortname flags). --custom-mode-name is for later use with xrandr
+   crt_resolution --interlaced n --left-margin 12 --right-margin 30 --top-margin 12 --bottom-margin 0 --run-mode n --custom-mode-name 240p
+and later 
+  xrandr --output VGA-1 --mode 240p --scale 1x2
+
+add 240p res to crt with proper aspect ratio (4:3) with margins
+crt_resolution --interlaced n --left-margin 12 --right-margin 30 --top-margin 12 --bottom-margin 0 --scale-horizontal 1 --scale-vertical 2 
+
+add 480i res to crt with margins
+crt_resolution --interlaced y  --interlaced y --left-margin 12 --right-margin 30 --top-margin 20 --bottom-margin 0 --scale-horizontal 1 --scale-vertical 1
