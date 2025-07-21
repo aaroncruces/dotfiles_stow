@@ -3,7 +3,8 @@
 
 # if not using sddm
 if [ $TTY = "/dev/tty1" ];then
-  exec startx
+ # startx sometimes wont work if called directly in nixos
+ # exec startx
  # export WLR_NO_HARDWARE_CURSORS=1
  # exec Hyprland
 fi
