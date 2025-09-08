@@ -42,4 +42,5 @@
 # # Just for example:
 # resize-overlay-duration = 4s 200ms
 
-#custom-shader = /home/aaron/Downloads/retro-terminal.glsl
+# custom-shader = /home/aaron/Downloads/retro-terminal.glsl
+# custom-shader-animation = always -->
