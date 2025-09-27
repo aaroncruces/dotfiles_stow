@@ -72,5 +72,7 @@
         }
     ],
     "latex-workshop.latex.recipe.default": "lastUsed",
-    "terminal.external.linuxExec": "ghostty"
+    "terminal.external.linuxExec": "ghostty",
+    "github.copilot.chat.agent.thinkingTool": true,
+    "github.copilot.chat.agent.currentEditorContext.enabled": false
 }
