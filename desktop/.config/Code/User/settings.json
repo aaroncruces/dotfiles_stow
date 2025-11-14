@@ -75,5 +75,6 @@
     "terminal.external.linuxExec": "ghostty",
     "github.copilot.chat.agent.thinkingTool": true,
     "github.copilot.chat.agent.currentEditorContext.enabled": false,
-    "explorer.confirmDragAndDrop": false
+    "explorer.confirmDragAndDrop": false,
+    "security.workspace.trust.untrustedFiles": "open"
 }
