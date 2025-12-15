@@ -76,5 +76,11 @@
     "github.copilot.chat.agent.thinkingTool": true,
     "github.copilot.chat.agent.currentEditorContext.enabled": false,
     "explorer.confirmDragAndDrop": false,
-    "security.workspace.trust.untrustedFiles": "open"
+    "security.workspace.trust.untrustedFiles": "open",
+    "hediet.vscode-drawio.resizeImages": null,
+    "claudeCode.preferredLocation": "panel",
+    "plantuml.exportFormat": "png",
+    "plantuml.render": "PlantUMLServer",
+    "plantuml.server": "http://localhost:8080/",
+    "plantuml.urlFormat": "png"
 }
