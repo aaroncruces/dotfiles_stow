@@ -76,5 +76,10 @@
     "github.copilot.chat.agent.thinkingTool": true,
     "github.copilot.chat.agent.currentEditorContext.enabled": false,
     "explorer.confirmDragAndDrop": false,
-    "security.workspace.trust.untrustedFiles": "open"
+    "security.workspace.trust.untrustedFiles": "open",
+    "hediet.vscode-drawio.resizeImages": null,
+    "workbench.editorAssociations": {
+        "*.pdf": "pdf.preview"
+    },
+    "python.useEnvironmentsExtension": true
 }
