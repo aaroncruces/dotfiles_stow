@@ -81,5 +81,10 @@
     "workbench.editorAssociations": {
         "*.pdf": "pdf.preview"
     },
-    "python.useEnvironmentsExtension": true
+    "python.useEnvironmentsExtension": true,
+    "claudeCode.preferredLocation": "panel",
+    "plantuml.exportFormat": "png",
+    "plantuml.render": "PlantUMLServer",
+    "plantuml.server": "http://localhost:8080/",
+    "plantuml.urlFormat": "png"
 }
