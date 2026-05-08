@@ -1,23 +1,139 @@
 {
+  "exclusive": true,
+  "reload_style_on_change": true,
   "position": "bottom",
-  "modules-left": ["hyprland/workspaces"],
-  "modules-center": ["hyprland/window"],
-  "modules-right": ["clock"],
-  
+  "spacing": 0,
+  "height": 0,
+  "margin-top": 5,
+  "margin-left": 5,
+  "margin-right": 5,
+  // "margin-bottom": 0,
+  "modules-left": [
+    "hyprland/workspaces"
+  ],
+  "modules-center": [
+    "clock",
+  ],
+  "modules-right": [
+    "tray"
+    , "custom/separator"
+    , "bluetooth"
+    , "network"
+    , "power-profiles-daemon"
+    , "pulseaudio#output"
+  ],
+  // "hyprland/workspaces": {
+  //     "disable-scroll": true,
+  //     "all-outputs": true,
+  //     "cursor": true,
+  //     "format": "{icon}",
+  //     "format-icons": {
+  //     "default": "",
+  //     "empty": "",
+  //     "focused": "",
+  //     "active": ""
+  //   },
+  // },
   "hyprland/workspaces": {
-    "format": "{windows}",
-    "format-window-separator": " ",
-    "window-rewrite-default": "{icon}",
-    "on-click": "activate"
+      "disable-scroll": true,
+      "all-outputs": false,                 /* ← THIS IS THE KEY CHANGE */
+      "cursor": true,
+      "format": "{icon}",
+      "sort-by-number": true,
+      "format-icons": {
+          "1": "➊",
+          "2": "❷",
+          "3": "❸",
+          "4": "❹",
+          "5": "❺",
+          "6": "❻",
+          "7": "❼",
+          "8": "❽",
+          "9": "➒ ",
+          "10": "➓",
+          // "default": ""
+          // "1": "①",
+          // "2": "②",
+          // "3": "③",
+          // "4": "④",
+          // "5": "⑤",
+          // "6": "⑥",
+          // "7": "⑦",
+          // "8": "⑧",
+          // "9": "⑨",
+          // "10": "⑩",
+          // "default": ""
+      }
   },
-  
-  "hyprland/window": {
-    "format": " {}",
-    "max-length": 50
+    "custom/separator": {
+      "format": "|", 
+      "tooltip": false
   },
-  
+
   "clock": {
-    "format": " {:%A %d  %H:%M:%S}",
-    "interval": 1
-  }
+    "format": "{:%A   %H:%M}",
+    "format-alt": "{:L%d %B W%V %Y}",
+    "tooltip-format": "<span>{calendar}</span>",
+    "calendar": {
+      "mode": "month",
+      "mode-mon-col": 3,
+      // "format": {
+      //   "month": "<span color='#ffead3'><b>{}</b></span>",
+      //   "weekdays": "<span color='#ffcc66'><b>{}</b></span>",
+      //   "today": "<span color='#ff6699'><b>{}</b></span>",
+      // },
+    },
+  },
+    "tray": {
+      "icon-size": 12,
+      "spacing": 12
+    },
+  "network": {
+    "format-icons": [
+      "󰤯",
+      "󰤟",
+      "󰤢",
+      "󰤥",
+      "󰤨"
+    ],
+    "format": "{icon}",
+    "format-wifi": "{icon}",
+    "format-ethernet": "󰌗",
+    "format-disconnected": "󰤮",
+    "tooltip-format-wifi": "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
+    "tooltip-format-ethernet": "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
+    "tooltip-format-disconnected": "Disconnected",
+    "interval": 3,
+    "spacing": 1,
+  },
+  
+  "bluetooth": {
+    "format": "",
+    "format-disabled": "󰂲",
+    "format-connected": "󰂱",
+    "tooltip-format": "Devices connected: {num_connections}",
+  },
+  "pulseaudio#input": {
+    "format-source": "",
+    "format-source-muted": "",
+    "format": "{format_source}",
+    "tooltip-format": "{format_source} {source_volume}%",
+    "scroll-step": 1,
+    "smooth-scrolling-threshold": 1,
+    "max-volume": 100,
+    "on-scroll-up": "pactl set-source-volume @DEFAULT_SOURCE@ +1%",
+    "on-scroll-down": "pactl set-source-volume @DEFAULT_SOURCE@ -1%"
+  },
+  "pulseaudio#output": {
+    "format": "{icon}",
+    "tooltip-format": "{icon}   {volume}%",
+    "format-muted": "",
+      "format-icons": {
+      "headphone": "",
+      "default": ["", "", ""]
+    },
+        "max-volume": 100,
+    "scroll-step": 2,
+    "smooth-scrolling-threshold": 1,
+  },
 }
