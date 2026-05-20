@@ -1,0 +1,5 @@
+hl.on("hyprland.start", function()
+    hl.exec_cmd("systemctl --user start hyprpolkitagent")
+    hl.exec_cmd("hyprctl setcursor BreezeX-RosePineDawn-Linux 24")
+    hl.exec_cmd("waybar")
+end)
