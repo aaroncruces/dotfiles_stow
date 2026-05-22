@@ -91,5 +91,10 @@
     "Lua.workspace.preloadFileSize": 2000,
     "Lua.diagnostics.disable": [
         "undefined-global"
-    ]
+    ],
+    "claudeCode.preferredLocation": "panel",
+    "plantuml.exportFormat": "png",
+    "plantuml.render": "PlantUMLServer",
+    "plantuml.server": "http://localhost:8080/",
+    "plantuml.urlFormat": "png"
 }
