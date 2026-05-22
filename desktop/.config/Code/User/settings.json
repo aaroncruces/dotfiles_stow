@@ -82,6 +82,16 @@
         "*.pdf": "pdf.preview"
     },
     "python.useEnvironmentsExtension": true,
+    "Lua.workspace.library": [
+        "/run/current-system/sw/share/hypr/stubs/hl.meta.lua"
+    ],
+    "Lua.diagnostics.globals": ["hl"],
+    "Lua.workspace.checkThirdParty": false,
+    "Lua.runtime.version": "Lua 5.4",
+    "Lua.workspace.preloadFileSize": 2000,
+    "Lua.diagnostics.disable": [
+        "undefined-global"
+    ],
     "claudeCode.preferredLocation": "panel",
     "plantuml.exportFormat": "png",
     "plantuml.render": "PlantUMLServer",
