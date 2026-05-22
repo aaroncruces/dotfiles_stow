@@ -89,5 +89,7 @@
     "Lua.workspace.checkThirdParty": false,
     "Lua.runtime.version": "Lua 5.4",
     "Lua.workspace.preloadFileSize": 2000,
-    "Lua.diagnostics.disable": ["undefined-global"]
+    "Lua.diagnostics.disable": [
+        "undefined-global"
+    ]
 }

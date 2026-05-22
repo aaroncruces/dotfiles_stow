@@ -19,3 +19,7 @@ hl.bind(mainMod .. " + F1", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(secondbrowser))
 hl.bind(mainMod .. " + C", hl.dsp.exec_cmd(ide))
+
+
+hl.bind(mainMod .. " + S", hl.dsp.exec_cmd("steam"))
+hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("remmina"))
