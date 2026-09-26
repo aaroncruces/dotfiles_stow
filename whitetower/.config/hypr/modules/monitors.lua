@@ -1,20 +1,19 @@
 -- =============================================
 -- monitors.lua
 -- Hyprland Lua Monitor Configuration (Hyprland 0.55.2+)
--- FINAL VERSION per your request:
---   • Only the three monitor description strings are hardcoded (exactly as you specified)
---   • No "lenovo / benq / hp" strings anywhere else in the code
+-- Connector names are used for the side monitors because both HP panels report
+-- the same EDID description, making desc: rules ambiguous.
 --   • SUPER + G          → Gaming mode (only primary at 1920x1080@60, others disabled)
 --   • SUPER + SHIFT + G  → Full config reload (hyprctl reload) + wallpapers restored
 --     (this is the reliable way to bring secondaries back with correct resolution/position)
 -- =============================================
 
 -- ========================
--- 1. MONITOR IDENTIFIERS (ONLY place these strings appear)
+-- 1. MONITOR IDENTIFIERS
 -- ========================
-local primary_monitor    = "desc:BNQ BenQ EX2780Q 32M01997019"   -- BenQ (primary/gaming)
-local secondary1_monitor = "desc:Lenovo Group Limited L1951p Wide   6V6A4410"  -- Lenovo (secondary 1)
-local secondary2_monitor = "desc:Hewlett Packard HP L1950 CNK8260PLG"         -- HP (secondary 2)
+local primary_monitor    = "DP-1"
+local secondary1_monitor = "HDMI-A-1"
+local secondary2_monitor = "DP-2"
 
 -- Generic socket names for mpvpaper (no brand names)
 local primary_socket   = "primary"
@@ -23,17 +22,17 @@ local secondary2_socket = "sec2"
 
 -- ========================
 -- 2. RESOLUTIONS / MODES / POSITIONS / SCALES
---    (exactly your original values – nothing changed)
+--    Side monitor modes match the connectors detected in Hyprland's log.
 -- ========================
 local primary_work_mode   = "2560x1440@144"
 local primary_gaming_mode = "1920x1080@60"
 local primary_position    = "0x0"
 
-local secondary1_mode     = "1440x900@60.00Hz"
-local secondary1_position = "-1440x350"
+local secondary1_mode     = "1024x768@60.00Hz"
+local secondary1_position = "-1024x336"
 
-local secondary2_mode     = "1280x1024@75.00Hz"
-local secondary2_position = "2560x150"
+local secondary2_mode     = "1280x1024@75.03Hz"
+local secondary2_position = "2560x208"
 
 local default_scale       = 1
 
@@ -53,7 +52,7 @@ local function start_mpvpaper(monitor_desc, socket_name)
         [[sh -c 'VIDEO=$(find "/home/aaron/Videos/wallpapers" -type f \( -iname "*.mp4" -o -iname "*.webm" -o -iname "*.mkv" -o -iname "*.gif" \) | shuf -n 1); [ -n "$VIDEO" ] && mpvpaper -o "--loop --no-audio --hwdec=auto --input-ipc-server=/tmp/mpvsocket-%s --panscan=1.0" "%s" "$VIDEO"']],
         socket_name, monitor_desc
     )
-    hl.exec_cmd(video_cmd)
+   -- hl.exec_cmd(video_cmd)
     hl.exec_cmd(string.format("sleep 5 && ~/gits/mpvpaper-stop/build/mpvpaper-stop -p /tmp/mpvsocket-%s --fork", socket_name))
 end
 
@@ -70,7 +69,7 @@ end
 
 -- Normal work layout (exactly your original config)
 local function applyNormalConfig()
-    -- BenQ – primary (work mode)
+    -- Primary BenQ (work mode)
     hl.monitor({
         output   = primary_monitor,
         mode     = primary_work_mode,
@@ -78,7 +77,7 @@ local function applyNormalConfig()
         scale    = default_scale,
     })
 
-    -- Lenovo – secondary 1
+    -- Left HP
     hl.monitor({
         output   = secondary1_monitor,
         mode     = secondary1_mode,
@@ -86,7 +85,7 @@ local function applyNormalConfig()
         scale    = default_scale,
     })
 
-    -- HP – secondary 2
+    -- Right HP
     hl.monitor({
         output   = secondary2_monitor,
         mode     = secondary2_mode,
@@ -135,14 +134,14 @@ applyNormalConfig()
 -- ========================
 -- 7. WORKSPACE RULES (unchanged)
 -- ========================
-hl.workspace_rule({ workspace = "1", monitor = secondary1_monitor, default = true })
-hl.workspace_rule({ workspace = "6", monitor = secondary1_monitor })
+-- hl.workspace_rule({ workspace = "1", monitor = secondary1_monitor, default = true })
+-- hl.workspace_rule({ workspace = "6", monitor = secondary1_monitor })
 
-hl.workspace_rule({ workspace = "2", monitor = primary_monitor, default = true })
-hl.workspace_rule({ workspace = "7", monitor = primary_monitor })
+-- hl.workspace_rule({ workspace = "2", monitor = primary_monitor, default = true })
+-- hl.workspace_rule({ workspace = "7", monitor = primary_monitor })
 
-hl.workspace_rule({ workspace = "3", monitor = secondary2_monitor, default = true })
-hl.workspace_rule({ workspace = "8", monitor = secondary2_monitor })
+-- hl.workspace_rule({ workspace = "3", monitor = secondary2_monitor, default = true })
+-- hl.workspace_rule({ workspace = "8", monitor = secondary2_monitor })
 
 -- ========================
 -- 8. STARTUP: mpvpaper on Hyprland start
