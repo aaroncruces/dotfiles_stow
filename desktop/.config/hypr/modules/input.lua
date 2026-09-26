@@ -1,3 +1,10 @@
+-- Keyboard, pointer, and default input behavior.
+--
+-- Device blocks target exact Hyprland device names. Run `hyprctl devices` after
+-- hardware changes and update these names if a keyboard or trackball stops
+-- receiving its intended layout/sensitivity.
+
+-- Main Spanish keyboard.
 hl.device({
     name = "sem-hct-keyboard",
     kb_layout = "es",
@@ -5,6 +12,8 @@ hl.device({
     kb_variant = "",
 })
 
+-- Ergodox variants all use US International so dead keys and accented
+-- characters remain available from the custom keyboard layout.
 hl.device({
     name = "zsa-technology-labs-ergodox-ez-keyboard",
     kb_layout = "us",
@@ -23,6 +32,8 @@ hl.device({
     kb_variant = "intl",
 })
 
+-- Kensington trackball tuning. Sensitivity is kept near neutral and the
+-- adaptive profile lets pointer movement accelerate naturally with speed.
 hl.device({
     name = "primax-kensington-eagle-trackball",
     sensitivity = 0.01,
@@ -38,6 +49,8 @@ hl.device({
     -- - Leave points empty for a flat custom curve: custom # Equivalent to no acceleration.
 })
 
+-- Global fallback input settings. Device-specific blocks above override these
+-- values when their exact device name is present.
 hl.config({
     input = {
         -- kb_layout = "us",
