@@ -18,6 +18,12 @@ hl.device({
 })
 
 hl.device({
+    name = "zsa-technology-labs-ergodox-ez-1",
+    kb_layout = "us",
+    kb_variant = "intl",
+})
+
+hl.device({
     name = "primax-kensington-eagle-trackball",
     sensitivity = 0.01,
     -- Option 1: No acceleration (constant speed regardless of movement)

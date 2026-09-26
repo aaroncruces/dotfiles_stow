@@ -96,5 +96,8 @@
     "plantuml.exportFormat": "png",
     "plantuml.render": "PlantUMLServer",
     "plantuml.server": "http://localhost:8080/",
-    "plantuml.urlFormat": "png"
+    "plantuml.urlFormat": "png",
+    "chatgpt.cliExecutable": "",
+    "makefile.configureOnOpen": true,
+    "chat.viewSessions.orientation": "stacked"
 }

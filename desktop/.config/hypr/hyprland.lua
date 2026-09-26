@@ -1,3 +1,2 @@
--- calls init.lua. which in turn, calls all lua files on modules/
+-- calls init.lua, which in turn calls all lua files in modules/
 require("modules")
-require("modules/monitors")

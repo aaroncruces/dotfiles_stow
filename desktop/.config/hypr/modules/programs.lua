@@ -21,5 +21,6 @@ hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(secondbrowser))
 hl.bind(mainMod .. " + C", hl.dsp.exec_cmd(ide))
 
 
+hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("grim -g \"$(slurp)\" \"$HOME/Pictures/screenshot-$(date +'%Y-%m-%d_%H-%M-%S').png\""))
 hl.bind(mainMod .. " + S", hl.dsp.exec_cmd("steam"))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("remmina"))
